@@ -1,7 +1,8 @@
-package com.example.pokedexrefactoring
+package com.example.pokedexrefactoring.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.pokedexrefactoring.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
