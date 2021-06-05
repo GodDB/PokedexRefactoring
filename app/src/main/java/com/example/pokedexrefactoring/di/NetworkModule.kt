@@ -8,6 +8,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -35,7 +37,17 @@ object NetworkModule {
                         Log.d("network", message)
                     }
                 }).apply { level = HttpLoggingInterceptor.Level.BODY }
-            ).build()
+            )
+            .addNetworkInterceptor { chain ->
+                val request: Request = chain.request()
+                val response = chain.proceed(request)
+
+
+
+
+                response
+            }
+            .build()
 
 
     @Provides

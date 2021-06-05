@@ -89,14 +89,20 @@ dependencies {
     def gsonVersion = '2.8.6'
 
     // rxjava2
-    def rxjava2 = '2.2.9'
+    def rxjava2 = '2.2.21'
+    def rxkotlin = '2.4.0'
 
     // rxandroid
-    def rxandroid = '2.0.2'
+    def rxandroid = '2.1.1'
 
     // android annotations
     def annotations = '28.0.0'
 
+    // shimmer recyclerView animation
+    def shimmer = "v1.3"
+
+    implementation "com.github.sharish:ShimmerRecyclerView:$shimmer"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin"
     implementation "com.android.support:support-annotations:$annotations"
 
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2"

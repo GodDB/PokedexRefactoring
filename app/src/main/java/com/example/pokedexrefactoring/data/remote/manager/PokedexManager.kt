@@ -1,5 +1,6 @@
 package com.example.pokedexrefactoring.data.remote.manager
 
+import com.example.pokedexrefactoring.data.ApiResponse
 import com.example.pokedexrefactoring.data.remote.model.PokemonInfo
 import com.example.pokedexrefactoring.data.remote.model.PokemonResponse
 import com.example.pokedexrefactoring.data.remote.service.PokedexService
