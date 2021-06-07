@@ -19,7 +19,7 @@ class PokemonAdapter(private val viewModel: MainViewModel) :
     }
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position)
     }
 
     companion object {
@@ -39,8 +39,9 @@ class PokemonViewHolder(
     private val itemPokemonBinding: ItemPokemonBinding
 ) : RecyclerView.ViewHolder(itemPokemonBinding.root) {
 
-    fun bind(data: Pokemon) {
+    fun bind(data: Pokemon, index : Int) {
         itemPokemonBinding.pokemon = data
+        itemPokemonBinding.index = index
         itemPokemonBinding.executePendingBindings()
     }
 }

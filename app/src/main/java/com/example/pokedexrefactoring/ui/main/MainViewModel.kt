@@ -7,6 +7,7 @@ import com.example.pokedexrefactoring.BaseViewModel
 import com.example.pokedexrefactoring.data.remote.model.Pokemon
 import com.example.pokedexrefactoring.data.remote.model.PokemonResponse
 import com.example.pokedexrefactoring.repository.MainRepository
+import com.example.pokedexrefactoring.util.Event
 import com.example.pokedexrefactoring.util.SchedulersFacade
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Notification
@@ -22,7 +23,7 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
     BaseViewModel() {
 
     // inputs
-    private val selectedPokemon: PublishSubject<Pokemon> = PublishSubject.create()
+    private val selectedPokemon: PublishSubject<Pair<Int, Pokemon>> = PublishSubject.create()
     private val _pageIndex: BehaviorSubject<Int> = BehaviorSubject.createDefault(0)
 
     // outputs
@@ -37,8 +38,8 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
     val errorMsg: LiveData<String>
         get() = _errorMsg
 
-    private val _showPokemonDetail: MutableLiveData<Pokemon> = MutableLiveData()
-    val showPokemonDetail: LiveData<Pokemon>
+    private val _showPokemonDetail: MutableLiveData<Event<Pair<Int, Pokemon>>> = MutableLiveData()
+    val showPokemonDetail: LiveData<Event<Pair<Int, Pokemon>>>
         get() = _showPokemonDetail
 
     init {
@@ -57,18 +58,18 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
             .subscribe(_errorMsg::setValue)
 
         compositeDisposable += selectedPokemon.throttleFirst(300, TimeUnit.MILLISECONDS)
+            .map { Event(it) }
             .subscribe(_showPokemonDetail::setValue, Throwable::printStackTrace)
 
     }
 
     @MainThread
     fun fetchPokemonList() {
-        //null일 수 없음
-        _pageIndex.onNext(_pageIndex.value!!.plus(1))
+        _pageIndex.onNext(_pageIndex.value?.plus(1) ?: 0)
     }
 
-    fun onSelectPokemonItem(pokemon: Pokemon) {
-        selectedPokemon.onNext(pokemon)
+    fun onSelectPokemonItem(index: Int, pokemon: Pokemon) {
+        selectedPokemon.onNext(index to pokemon)
     }
 
     private fun fetchPokemonList(page: Int): Observable<Notification<PokemonResponse>> {
@@ -85,10 +86,8 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
             isPagingFinished = true
         } else {
             val cachedList = _pokemonList.value ?: emptyList()
-            _pokemonList.value = cachedList.toMutableList().apply { addAll(pokemons ?: return) }
+            _pokemonList.value = cachedList.toMutableList().apply { addAll(pokemons) }
         }
-
     }
-
 }
 
